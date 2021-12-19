@@ -26,13 +26,22 @@ public class SFCharacter : MonoBehaviour
     {
         characterControl = this.GetComponent<AICharacterControl>();
         characterAgent = this.GetComponent<NavMeshAgent>();
-        if (this.destination == null) this.destination = this.transform;
-        else 
-            if (characterControl)
-                characterControl.target.localPosition = velocity;
+        if (this.destination == null)
+        {
+            this.destination = this.transform;
+        }
+        else if (characterControl)
+        {
+            characterControl.target.localPosition = velocity;
+        }          
         if (characterAgent)
+        {
             characterAgent.speed = desiredSpeed;
+            characterAgent.SetDestination(destination.position);
+        }
+        
         radius = 0.5f;
+        characterAgent.radius = radius;
     }
 
     // Update is called once per frame
@@ -64,7 +73,9 @@ public class SFCharacter : MonoBehaviour
     Vector3 DrivingForce()
     {
         const float relaxationT = 0.54f;
+
         Vector3 desiredDirection = destination.transform.position - this.transform.position;
+        //Vector3 desiredDirection = characterAgent.steeringTarget - this.transform.position;
         desiredDirection.Normalize();
 
         Vector3 drivingForce = (desiredSpeed * desiredDirection - velocity) / relaxationT;
@@ -130,8 +141,8 @@ public class SFCharacter : MonoBehaviour
 
     Vector3 WallInteractForce()
     {
-        const float A = 3f;
-        const float B = 0.8f;
+        const float repulsiveStrength = 3f;
+        const float range = 0.8f;
 
         float squaredDist = Mathf.Infinity;
         float minSquaredDist = Mathf.Infinity;
@@ -152,7 +163,7 @@ public class SFCharacter : MonoBehaviour
 
         float distToNearestObs = Mathf.Sqrt(squaredDist) - radius;
 
-        float interactionForce = A * Mathf.Exp(-distToNearestObs / B);
+        float interactionForce = repulsiveStrength * Mathf.Exp(-distToNearestObs / range);
 
         minDistVector.Normalize();
         minDistVector.y = 0;
