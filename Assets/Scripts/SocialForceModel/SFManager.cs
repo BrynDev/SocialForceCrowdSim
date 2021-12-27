@@ -182,10 +182,11 @@ public class SFManager : MonoBehaviour
 
     private Vector3 CalculateWallRepulsiveForce(SFCharacter currentAgent)
     {
-        const float repulsiveStrength = 3f;
+        const float repulsiveStrength = 1.0f;
         const float range = 0.8f;
 
-        float squaredDist = Mathf.Infinity;
+        float squaredDistToObject = Mathf.Infinity;
+        
         float minSquaredDist = Mathf.Infinity;
         Vector3 minDistVector = new Vector3();
 
@@ -193,16 +194,18 @@ public class SFManager : MonoBehaviour
         foreach (Wall wall in m_Walls)
         {
             Vector3 vectorToNearestPoint = currentAgent.transform.position - wall.GetNearestPoint(currentAgent.transform.position);
-            squaredDist = Vector3.SqrMagnitude(vectorToNearestPoint);
+            float squaredDist = Vector3.SqrMagnitude(vectorToNearestPoint);
 
             if (squaredDist < minSquaredDist)
             {
                 minSquaredDist = squaredDist;
                 minDistVector = vectorToNearestPoint;
+                squaredDistToObject = squaredDist;
             }
         }
 
-        float distToNearestObs = Mathf.Sqrt(squaredDist) - currentAgent.Radius;
+        
+        float distToNearestObs = Mathf.Sqrt(squaredDistToObject) - currentAgent.Radius;
 
         float interactionForce = repulsiveStrength * Mathf.Exp(-distToNearestObs / range);
 
