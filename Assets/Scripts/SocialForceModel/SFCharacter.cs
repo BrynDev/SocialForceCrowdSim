@@ -8,12 +8,12 @@ public class SFCharacter : MonoBehaviour
 {
     Vector3 velocity = new Vector3();
 
-    AICharacterControl characterControl;
-    NavMeshAgent characterAgent;
+   // AICharacterControl characterControl;
+    NavMeshAgent m_CharacterAgent;
     float radius = 0.5f;
 
-    [SerializeField] private Transform destination;
-    [SerializeField] private float desiredSpeed = 0.5f;
+    [SerializeField] private Transform m_Destination;
+    [SerializeField] private float m_DesiredSpeed = 0.5f;
 
     private float m_ObstacleRepulsiveStrength = 5.0f;
     private float m_ObstacleRepulsiveRange = 1.5f;
@@ -32,35 +32,31 @@ public class SFCharacter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        characterControl = this.GetComponent<AICharacterControl>();
-        characterAgent = this.GetComponent<NavMeshAgent>();
-        if (this.destination == null)
-        {
-            this.destination = this.transform;
-        }
-        else if (characterControl)
+        //characterControl = this.GetComponent<AICharacterControl>();
+        m_CharacterAgent = GetComponent<NavMeshAgent>();
+       /* else if (characterControl)
         {
             characterControl.target.localPosition = velocity;
-        }          
-        if (characterAgent)
-        {
-            characterAgent.speed = desiredSpeed;
-            characterAgent.SetDestination(destination.position);
-            // Stop the navmesh agent from performing any movement - we want full manual control of agent movement
-            characterAgent.isStopped = true;
-        }
-
+        }    */      
+      
+        m_CharacterAgent.speed = m_DesiredSpeed;        
         //characterAgent.radius = radius;
 
         m_SFManager = GameObject.Find("SceneScripts").GetComponent<SFManager>();
         m_SFManager.AddAgent(this);
+
+        SetNewDestination();
+        m_CharacterAgent.Warp(m_Destination.position);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (characterAgent.remainingDistance < characterAgent.stoppingDistance)
-                return;
+        if (m_CharacterAgent.remainingDistance < m_CharacterAgent.stoppingDistance)
+        {
+            SetNewDestination();
+        }
+               
 
         Vector3 acceleration = new Vector3();
 
@@ -68,10 +64,10 @@ public class SFCharacter : MonoBehaviour
         velocity = acceleration * Time.deltaTime;
 
         // Limit maximum velocity
-        if (Vector3.SqrMagnitude(velocity) > desiredSpeed * desiredSpeed)
+        if (Vector3.SqrMagnitude(velocity) > m_DesiredSpeed * m_DesiredSpeed)
         {
             velocity.Normalize();
-            velocity *= desiredSpeed;
+            velocity *= m_DesiredSpeed;
         }
 
        // Prevent inanimate objects that are marked as agents from moving
@@ -86,10 +82,10 @@ public class SFCharacter : MonoBehaviour
         const float relaxationT = 0.54f;
 
         //Vector3 desiredDirection = destination.transform.position - this.transform.position;
-        Vector3 desiredDirection = characterAgent.steeringTarget - this.transform.position;
+        Vector3 desiredDirection = m_CharacterAgent.steeringTarget - this.transform.position;
         desiredDirection.Normalize();
 
-        Vector3 drivingForce = (desiredSpeed * desiredDirection - velocity) / relaxationT;
+        Vector3 drivingForce = (m_DesiredSpeed * desiredDirection - velocity) / relaxationT;
 
         return drivingForce;
     }
@@ -107,6 +103,14 @@ public class SFCharacter : MonoBehaviour
         float turnAmount = Mathf.Atan2(move.x, move.z);
         float turnSpeed = Mathf.Lerp(stationaryTurnSpeed, movingTurnSpeed, forwardAmount);
         transform.Rotate(0, turnAmount * turnSpeed * Time.deltaTime, 0);
+    }
+
+    private void SetNewDestination()
+    {
+        m_Destination = m_SFManager.GetRandomDestination().transform;
+        m_CharacterAgent.SetDestination(m_Destination.position);
+        // Stop the navmesh agent from performing any movement - we want full manual control of agent movement
+        m_CharacterAgent.isStopped = true;
     }
 
 }

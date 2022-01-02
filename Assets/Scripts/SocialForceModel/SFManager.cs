@@ -6,8 +6,9 @@ public class SFManager : MonoBehaviour
     private List<SFCharacter> m_Agents = new List<SFCharacter>();
     private List<SFObstacle> m_Obstacles = new List<SFObstacle>();
     private List<Wall> m_Walls = new List<Wall>();
+    private List<PedestrianDest> m_Destinations = new List<PedestrianDest>();
 
-    private void Start()
+    private void Awake()
     {
         GameObject[] obstacleArray = GameObject.FindGameObjectsWithTag("Obstacle");
         foreach (GameObject obstacle in obstacleArray)
@@ -20,11 +21,24 @@ public class SFManager : MonoBehaviour
         {
             m_Walls.Add(wall.GetComponent<Wall>());
         }
+
+        GameObject[] destArray = GameObject.FindGameObjectsWithTag("Destination");
+        foreach (GameObject destination in destArray)
+        {
+            m_Destinations.Add(destination.GetComponent<PedestrianDest>());
+        }
+
     }
 
     public void AddAgent(SFCharacter agentToAdd)
     {
         m_Agents.Add(agentToAdd);
+    }
+
+    public PedestrianDest GetRandomDestination()
+    {
+        int randomIdx = Random.Range(0, m_Destinations.Count);
+        return m_Destinations[randomIdx];
     }
 
     public Vector3 CalculateAttractiveForce()
