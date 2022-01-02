@@ -45,8 +45,11 @@ public class SFCharacter : MonoBehaviour
         m_SFManager = GameObject.Find("SceneScripts").GetComponent<SFManager>();
         m_SFManager.AddAgent(this);
 
-        SetNewDestination();
-        m_CharacterAgent.Warp(m_Destination.position);
+        if(m_Destination == null)
+        {
+            SetNextOrderedDestination();
+            m_CharacterAgent.Warp(m_Destination.position);
+        }     
     }
 
     // Update is called once per frame
@@ -108,6 +111,14 @@ public class SFCharacter : MonoBehaviour
     private void SetNewDestination()
     {
         m_Destination = m_SFManager.GetRandomDestination().transform;
+        m_CharacterAgent.SetDestination(m_Destination.position);
+        // Stop the navmesh agent from performing any movement - we want full manual control of agent movement
+        m_CharacterAgent.isStopped = true;
+    }
+
+    private void SetNextOrderedDestination()
+    {
+        m_Destination = m_SFManager.GetNextOrderedDestination().transform;
         m_CharacterAgent.SetDestination(m_Destination.position);
         // Stop the navmesh agent from performing any movement - we want full manual control of agent movement
         m_CharacterAgent.isStopped = true;

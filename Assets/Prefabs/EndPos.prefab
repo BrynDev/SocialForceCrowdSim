@@ -12,8 +12,6 @@ GameObject:
   - component: {fileID: 3108220018296769364}
   - component: {fileID: 3759137640764982541}
   - component: {fileID: 4929330909962596202}
-  - component: {fileID: 7022317128031754678}
-  - component: {fileID: 6634761167848578038}
   m_Layer: 0
   m_Name: EndPos
   m_TagString: Destination
@@ -97,34 +95,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7022317128031754678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8527788111333613157}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9f4dd46deec96045b6d8eeec4c3e641, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 0.4
-  waitBeforeMoving: 0
-  hideWhenPlaying: 1
---- !u!114 &6634761167848578038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8527788111333613157}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 451238bd7f8b3244eb8bc8eb639dd46d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 0.4
-  waitBeforeMoving: 0
-  hideWhenPlaying: 1
-  destinationReached: 0

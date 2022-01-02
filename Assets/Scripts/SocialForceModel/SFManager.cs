@@ -6,7 +6,8 @@ public class SFManager : MonoBehaviour
     private List<SFCharacter> m_Agents = new List<SFCharacter>();
     private List<SFObstacle> m_Obstacles = new List<SFObstacle>();
     private List<Wall> m_Walls = new List<Wall>();
-    private List<PedestrianDest> m_Destinations = new List<PedestrianDest>();
+    private List<GameObject> m_Destinations = new List<GameObject>();
+    private int m_NextDestIndex = 0;
 
     private void Awake()
     {
@@ -25,7 +26,7 @@ public class SFManager : MonoBehaviour
         GameObject[] destArray = GameObject.FindGameObjectsWithTag("Destination");
         foreach (GameObject destination in destArray)
         {
-            m_Destinations.Add(destination.GetComponent<PedestrianDest>());
+            m_Destinations.Add(destination);
         }
 
     }
@@ -35,10 +36,17 @@ public class SFManager : MonoBehaviour
         m_Agents.Add(agentToAdd);
     }
 
-    public PedestrianDest GetRandomDestination()
+    public GameObject GetRandomDestination()
     {
         int randomIdx = Random.Range(0, m_Destinations.Count);
         return m_Destinations[randomIdx];
+    }
+
+    public GameObject GetNextOrderedDestination()
+    {
+        GameObject destToReturn = m_Destinations[m_NextDestIndex];
+        m_NextDestIndex = (++m_NextDestIndex % m_Destinations.Count);
+        return destToReturn;
     }
 
     public Vector3 CalculateAttractiveForce()
@@ -151,7 +159,8 @@ public class SFManager : MonoBehaviour
     private Vector3 CalculateRepulsive(SFCharacter currentAgent, Vector3 otherPosition)
     {
         const float directionWeight = 2.0f;
-        const float gamma = 0.35f;
+        //const float gamma = 0.35f;
+        const float gamma = 0.80f;
         const float nPrime = 3.0f;
         const float n = 2.0f;
 

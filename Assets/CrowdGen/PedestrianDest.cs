@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PedestrianDest : MonoBehaviour
 {
-
     public float speed = 0.4f; // Pedestrian speed to reach this node
     public float waitBeforeMoving = 0; // Wait time before start moving to node
 
