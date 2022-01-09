@@ -6,7 +6,7 @@ using UnityStandardAssets.Characters.ThirdPerson;
 
 public class SFCharacter : MonoBehaviour
 {
-    Vector3 velocity = new Vector3();
+    Vector3 m_Velocity = new Vector3();
 
    // AICharacterControl characterControl;
     NavMeshAgent m_CharacterAgent;
@@ -27,7 +27,7 @@ public class SFCharacter : MonoBehaviour
     public float AgentRepulsiveStrength { get { return m_AgentRepulsiveStrength; } }
     public float AgentRepulsiveRange { get { return m_AgentRepulsiveRange; } }
     public float Radius { get { return m_Radius; } }
-    public Vector3 Velocity { get { return velocity; } }
+    public Vector3 Velocity { get { return m_Velocity; } }
 
     // Start is called before the first frame update
     void Start()
@@ -49,7 +49,9 @@ public class SFCharacter : MonoBehaviour
         {
             SetNextOrderedDestination();
             m_CharacterAgent.Warp(m_Destination.position);
-        }     
+        }
+
+        m_CharacterAgent.stoppingDistance = 1.5f;
     }
 
     // Update is called once per frame
@@ -64,20 +66,20 @@ public class SFCharacter : MonoBehaviour
         Vector3 acceleration = new Vector3();
 
         acceleration = DrivingForce() + m_SFManager.CalculateRepulsiveForce(this);
-        velocity = acceleration * Time.deltaTime;
+        m_Velocity = acceleration * Time.deltaTime;
 
         // Limit maximum velocity
-        if (Vector3.SqrMagnitude(velocity) > m_DesiredSpeed * m_DesiredSpeed)
+        if (Vector3.SqrMagnitude(m_Velocity) > m_DesiredSpeed * m_DesiredSpeed)
         {
-            velocity.Normalize();
-            velocity *= m_DesiredSpeed;
+            m_Velocity.Normalize();
+            m_Velocity *= m_DesiredSpeed;
         }
 
        // Prevent inanimate objects that are marked as agents from moving
       
-       transform.position += velocity;
+       transform.position += m_Velocity;
 
-        RotateToVelocity(velocity);
+        RotateToVelocity(m_Velocity);
     }
 
     Vector3 DrivingForce()
@@ -88,7 +90,7 @@ public class SFCharacter : MonoBehaviour
         Vector3 desiredDirection = m_CharacterAgent.steeringTarget - this.transform.position;
         desiredDirection.Normalize();
 
-        Vector3 drivingForce = (m_DesiredSpeed * desiredDirection - velocity) / relaxationT;
+        Vector3 drivingForce = (m_DesiredSpeed * desiredDirection - m_Velocity) / relaxationT;
 
         return drivingForce;
     }

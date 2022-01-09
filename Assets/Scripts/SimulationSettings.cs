@@ -13,10 +13,7 @@ public class SimulationSettings : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        /*for(int i = 0; i < m_NrAgents; ++i)
-        {
-            Instantiate(m_AgentPrefab, m_AgentParentTransform);
-        }     */   
+        Debug.Log("Started spawning agents");
     }
 
     private void Update()
@@ -31,6 +28,7 @@ public class SimulationSettings : MonoBehaviour
             // If enough agents were spawned, disable further spawning
             m_CanSpawn = false;
             m_ElapsedTime = 0.0f;
+            Debug.Log("Finished spawning agents");
         }
 
         m_ElapsedTime += Time.deltaTime;

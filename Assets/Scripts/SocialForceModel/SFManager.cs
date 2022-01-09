@@ -67,32 +67,32 @@ public class SFManager : MonoBehaviour
     {
         // Basic implementation - Not realistic enough (directional turning issues)
 
-        //Vector3 repulsiveForce = new Vector3();
-        //foreach(SFObstacle obstacle in m_Obstacles)
-        //{
-        //    Vector3 vectorToAgent = currentAgent.transform.position - obstacle.transform.position;
-        //    float distanceToObstacle = vectorToAgent.magnitude;
-        //    float angleBetween = Vector3.Angle(vectorToAgent, currentAgent.transform.forward);
-        //    const float compareEpsilon = 0.1f;
-        //    if(Mathf.Abs(angleBetween) < compareEpsilon)
-        //    {
-        //        repulsiveForce.z += 0.2f;
-        //    }
+        /*Vector3 repulsiveForce = new Vector3();
+        foreach (SFCharacter agent in m_Agents)
+        {
+            Vector3 vectorToAgent = currentAgent.transform.position - agent.transform.position;
+            float distanceToObstacle = vectorToAgent.magnitude;
+            float angleBetween = Vector3.Angle(vectorToAgent, currentAgent.transform.forward);
+            const float compareEpsilon = 0.1f;
+            if (Mathf.Abs(angleBetween) < compareEpsilon)
+            {
+                repulsiveForce.z += 0.2f;
+            }
 
-        //    vectorToAgent.Normalize();
-        //    repulsiveForce += (currentAgent.ObstacleRepulsiveStrength) * Mathf.Exp((currentAgent.Radius - distanceToObstacle) / currentAgent.ObstacleRepulsiveRange) * vectorToAgent;
-        //}
-        //repulsiveForce.y = 0.0f;
-        //return repulsiveForce;
+            vectorToAgent.Normalize();
+            repulsiveForce += (currentAgent.ObstacleRepulsiveStrength) * Mathf.Exp((currentAgent.Radius - distanceToObstacle) / currentAgent.ObstacleRepulsiveRange) * vectorToAgent;
+        }
+        repulsiveForce.y = 0.0f;
+        return repulsiveForce;*/
 
         // Improved implementation provided by framework
         // Model parameters derived by Moussaïd et. al as described in "Experimental study of the behavioural mechanisms underlying self-organization in human crowds"
-        /*const float directionWeight = 2.0f;
+        const float directionWeight = 2.0f;
         const float gamma = 0.35f;
         const float nPrime = 3.0f;
         const float n = 2.0f;
 
-        const float repulsiveStrength = 47f;
+        /*const float repulsiveStrength = 47f;
         float B, interactionAngle;
         int angleSign;
         Vector3 interactionForce = new Vector3(0f, 0f, 0f);
@@ -141,7 +141,7 @@ public class SFManager : MonoBehaviour
                 continue;
             }
 
-            agentRepulsiveForce += CalculateRepulsive(currentAgent, agent.transform.position);
+            agentRepulsiveForce += CalculateRepulsive(currentAgent, agent.transform.position, agent.Velocity);
         }
         return agentRepulsiveForce;
     }
@@ -151,18 +151,18 @@ public class SFManager : MonoBehaviour
         Vector3 obstacleRepulsiveForce = new Vector3();
         foreach (SFObstacle obstacle in m_Obstacles)
         {
-            obstacleRepulsiveForce += CalculateRepulsive(currentAgent, obstacle.transform.position);
+            obstacleRepulsiveForce += CalculateRepulsive(currentAgent, obstacle.transform.position, Vector3.zero); //Obstacles do not move, they have a velocity of 0
         }
         return obstacleRepulsiveForce;
     }
 
-    private Vector3 CalculateRepulsive(SFCharacter currentAgent, Vector3 otherPosition)
+    private Vector3 CalculateRepulsive(SFCharacter currentAgent, Vector3 otherPosition, Vector3 otherVelocity)
     {
         const float directionWeight = 2.0f;
         //const float gamma = 0.35f;
-        const float gamma = 0.80f;
-        const float nPrime = 3.0f;
-        const float n = 2.0f;
+        const float gamma = 0.40f;
+        const float angularInteractionRangeLarge = 3.0f;
+        const float angularInteractionRange = 2.0f;
 
         const float repulsiveStrength = 47f;
         float B, interactionAngle;
@@ -180,7 +180,7 @@ public class SFManager : MonoBehaviour
         }
 
         Vector3 directionToAgent = vectorToAgent.normalized;
-        Vector3 interactionVector = directionWeight * (currentAgent.Velocity) + directionToAgent;
+        Vector3 interactionVector = directionWeight * (currentAgent.Velocity - otherVelocity) + directionToAgent;
 
         B = gamma * Vector3.Magnitude(interactionVector);
 
@@ -194,8 +194,8 @@ public class SFManager : MonoBehaviour
 
         float distanceToAgent = Vector3.Magnitude(vectorToAgent);
 
-        float deceleration = -repulsiveStrength * Mathf.Exp(-distanceToAgent / B - (nPrime * B * interactionAngle) * (nPrime * B * interactionAngle));
-        float directionalChange = -repulsiveStrength * angleSign * Mathf.Exp(-distanceToAgent / B - (n * B * interactionAngle) * (n * B * interactionAngle));
+        float deceleration = -repulsiveStrength * Mathf.Exp(-distanceToAgent / B - (angularInteractionRangeLarge * B * interactionAngle) * (angularInteractionRangeLarge * B * interactionAngle));
+        float directionalChange = -repulsiveStrength * angleSign * Mathf.Exp(-distanceToAgent / B - (angularInteractionRange * B * interactionAngle) * (angularInteractionRange * B * interactionAngle));
         Vector3 normalInteractionVector = new Vector3(-interactionDir.z, interactionDir.y, interactionDir.x);
         //Vector3 normalInteractionVector = new Vector3(-interactionDir.y, interactionDir.x, 0);
 
@@ -205,8 +205,8 @@ public class SFManager : MonoBehaviour
 
     private Vector3 CalculateWallRepulsiveForce(SFCharacter currentAgent)
     {
-        const float repulsiveStrength = 1.0f;
-        const float range = 0.8f;
+        const float repulsiveStrength = 2.0f;
+        const float repulsiveRange = 0.4f;
 
         float squaredDistToObject = Mathf.Infinity;
         
@@ -216,13 +216,13 @@ public class SFManager : MonoBehaviour
         // Find distance to nearest obstacles
         foreach (Wall wall in m_Walls)
         {
-            Vector3 vectorToNearestPoint = currentAgent.transform.position - wall.GetNearestPoint(currentAgent.transform.position);
-            float squaredDist = Vector3.SqrMagnitude(vectorToNearestPoint);
+            Vector3 vectorNearestPointToAgent = currentAgent.transform.position - wall.GetNearestPoint(currentAgent.transform.position);
+            float squaredDist = Vector3.SqrMagnitude(vectorNearestPointToAgent);
 
             if (squaredDist < minSquaredDist)
             {
                 minSquaredDist = squaredDist;
-                minDistVector = vectorToNearestPoint;
+                minDistVector = vectorNearestPointToAgent;
                 squaredDistToObject = squaredDist;
             }
         }
@@ -230,7 +230,7 @@ public class SFManager : MonoBehaviour
         
         float distToNearestObs = Mathf.Sqrt(squaredDistToObject) - currentAgent.Radius;
 
-        float interactionForce = repulsiveStrength * Mathf.Exp(-distToNearestObs / range);
+        float interactionForce = repulsiveStrength * Mathf.Exp(-distToNearestObs / repulsiveRange);
 
         minDistVector.Normalize();
         minDistVector.y = 0;
