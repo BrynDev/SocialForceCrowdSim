@@ -1,9 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
+public enum PersonalityType
+{
+    standard,
+    agressive,
+    cautious
+}
 
 public struct CharacterParameters
 {
+    // Type
+    private PersonalityType m_Type;
+    public PersonalityType Type { get { return m_Type; } set { m_Type = value; } }
+
     // Obstacle repulsive
     private float m_ObstacleRepulsiveWeight;
     public float ObstacleRepulsiveWeight { get { return m_ObstacleRepulsiveWeight; } set { m_ObstacleRepulsiveWeight = value; } }
@@ -19,6 +29,16 @@ public struct CharacterParameters
     public float AgentRepulsiveStrength { get { return m_AgentRepulsiveStrength; } set { m_AgentRepulsiveStrength = value; } }
     private float m_AgentRepulsiveRange;
     public float AgentRepulsiveRange { get { return m_AgentRepulsiveRange; } set { m_AgentRepulsiveRange = value; } }
+
+    // General repulsive
+    private float m_DirectionWeight;
+    public float DirectionWeight { get { return m_DirectionWeight; } set { m_DirectionWeight = value; } }
+    private float m_RangeDirFactor;
+    public float RangeDirFactor { get { return m_RangeDirFactor; } set { m_RangeDirFactor = value; } }
+    private float m_AngInteractRange;
+    public float AngInteractRange { get { return m_AngInteractRange; } set { m_AngInteractRange = value; } }
+    private float m_AngInteractRangeLarge;
+    public float AngInteractRangeLarge { get { return m_AngInteractRangeLarge; } set { m_AngInteractRangeLarge = value; } }
 
     // Wall repulsive
     private float m_WallRepulsiveWeight;
@@ -39,9 +59,11 @@ public class SFCharacter : MonoBehaviour
 {
     [SerializeField] private Transform m_Destination;
     private Vector3 m_Velocity = new Vector3();
+    public Vector3 Velocity { get { return m_Velocity; } }
     private NavMeshAgent m_CharacterAgent;
 
     private float m_Radius = 0.5f;
+    public float Radius { get { return m_Radius; } }
     private SFManager m_SFManager;
     private CharacterParameters m_Params;
     public CharacterParameters Parameters
@@ -57,9 +79,6 @@ public class SFCharacter : MonoBehaviour
             m_CharacterAgent.speed = value.DesiredSpeed;
         } 
     }
-
-    public float Radius { get { return m_Radius; } }
-    public Vector3 Velocity { get { return m_Velocity; } }
 
     // Start is called before the first frame update
     void Awake()
