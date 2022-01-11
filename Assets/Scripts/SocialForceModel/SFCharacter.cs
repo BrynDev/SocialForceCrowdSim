@@ -1,47 +1,71 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
-using UnityStandardAssets.Characters.ThirdPerson;
+
+
+public struct CharacterParameters
+{
+    // Obstacle repulsive
+    private float m_ObstacleRepulsiveWeight;
+    public float ObstacleRepulsiveWeight { get { return m_ObstacleRepulsiveWeight; } set { m_ObstacleRepulsiveWeight = value; } }
+    private float m_ObstacleRepulsiveStrength;
+    public float ObstacleRepulsiveStrength { get { return m_ObstacleRepulsiveStrength; } set { m_ObstacleRepulsiveStrength = value; } }
+    private float m_ObstacleRepulsiveRange;
+    public float ObstacleRepulsiveRange { get { return m_ObstacleRepulsiveRange; } set { m_ObstacleRepulsiveRange = value; } }
+
+    // Agent repulsive
+    private float m_AgentRepulsiveWeight;
+    public float AgentRepulsiveWeight { get { return m_AgentRepulsiveWeight; } set { m_AgentRepulsiveWeight = value; } }
+    private float m_AgentRepulsiveStrength;
+    public float AgentRepulsiveStrength { get { return m_AgentRepulsiveStrength; } set { m_AgentRepulsiveStrength = value; } }
+    private float m_AgentRepulsiveRange;
+    public float AgentRepulsiveRange { get { return m_AgentRepulsiveRange; } set { m_AgentRepulsiveRange = value; } }
+
+    // Wall repulsive
+    private float m_WallRepulsiveWeight;
+    public float WallRepulsiveWeight { get { return m_WallRepulsiveWeight; } set { m_WallRepulsiveWeight = value; } }
+    private float m_WallRepulsiveStrength;
+    public float WallRepulsiveStrength { get { return m_WallRepulsiveStrength; } set { m_WallRepulsiveStrength = value; } }
+    private float m_WallRepulsiveRange;
+    public float WallRepulsiveRange { get { return m_WallRepulsiveRange; } set { m_WallRepulsiveRange = value; } }
+
+    // Driving force
+    private float m_DrivingWeight;
+    public float DrivingWeight { get { return m_DrivingWeight; } set { m_DrivingWeight = value; } }
+    private float m_DesiredSpeed;
+    public float DesiredSpeed { get { return m_DesiredSpeed; } set { m_DesiredSpeed = value; } }
+}
 
 public class SFCharacter : MonoBehaviour
 {
-    Vector3 m_Velocity = new Vector3();
-
-   // AICharacterControl characterControl;
-    NavMeshAgent m_CharacterAgent;
-    float radius = 0.5f;
-
     [SerializeField] private Transform m_Destination;
-    [SerializeField] private float m_DesiredSpeed = 0.5f;
+    private Vector3 m_Velocity = new Vector3();
+    private NavMeshAgent m_CharacterAgent;
 
-    private float m_ObstacleRepulsiveStrength = 5.0f;
-    private float m_ObstacleRepulsiveRange = 1.5f;
-    private float m_AgentRepulsiveStrength = 45.0f;
-    private float m_AgentRepulsiveRange = 5.0f;
     private float m_Radius = 0.5f;
     private SFManager m_SFManager;
+    private CharacterParameters m_Params;
+    public CharacterParameters Parameters
+    { 
+        get 
+        { 
+            return m_Params;
+        } 
+        set 
+        { 
+            m_Params = value;
+            // speed requires a separate assignment because it is used by the NavmeshAgent component
+            m_CharacterAgent.speed = value.DesiredSpeed;
+        } 
+    }
 
-    public float ObstacleRepulsiveStrength { get { return m_ObstacleRepulsiveStrength; } }
-    public float ObstacleRepulsiveRange { get { return m_ObstacleRepulsiveRange; } }
-    public float AgentRepulsiveStrength { get { return m_AgentRepulsiveStrength; } }
-    public float AgentRepulsiveRange { get { return m_AgentRepulsiveRange; } }
     public float Radius { get { return m_Radius; } }
     public Vector3 Velocity { get { return m_Velocity; } }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        //characterControl = this.GetComponent<AICharacterControl>();
-        m_CharacterAgent = GetComponent<NavMeshAgent>();
-       /* else if (characterControl)
-        {
-            characterControl.target.localPosition = velocity;
-        }    */      
-      
-        m_CharacterAgent.speed = m_DesiredSpeed;        
-        //characterAgent.radius = radius;
-
+        m_CharacterAgent = GetComponent<NavMeshAgent>();      
+    
         m_SFManager = GameObject.Find("SceneScripts").GetComponent<SFManager>();
         m_SFManager.AddAgent(this);
 
@@ -61,24 +85,22 @@ public class SFCharacter : MonoBehaviour
         {
             SetNewDestination();
         }
-               
-
-        Vector3 acceleration = new Vector3();
-
-        acceleration = DrivingForce() + m_SFManager.CalculateRepulsiveForce(this);
+                
+        Vector3 drivingForce = m_Params.DrivingWeight * DrivingForce();
+        Vector3 obstacleRepulsiveForce = m_Params.ObstacleRepulsiveWeight * m_SFManager.CalculateObstacleRepulsiveForce(this);
+        Vector3 agentRepulsiveForce = m_Params.AgentRepulsiveWeight * m_SFManager.CalculateAgentRepulsiveForce(this);
+        Vector3 wallRepulsiveForce = m_Params.WallRepulsiveWeight * m_SFManager.CalculateWallRepulsiveForce(this);
+        Vector3 acceleration = drivingForce + obstacleRepulsiveForce + agentRepulsiveForce + wallRepulsiveForce;
         m_Velocity = acceleration * Time.deltaTime;
 
         // Limit maximum velocity
-        if (Vector3.SqrMagnitude(m_Velocity) > m_DesiredSpeed * m_DesiredSpeed)
+        if (Vector3.SqrMagnitude(m_Velocity) > m_Params.DesiredSpeed * m_Params.DesiredSpeed)
         {
             m_Velocity.Normalize();
-            m_Velocity *= m_DesiredSpeed;
-        }
-
-       // Prevent inanimate objects that are marked as agents from moving
-      
-       transform.position += m_Velocity;
-
+            m_Velocity *= m_Params.DesiredSpeed;
+        }      
+        
+        transform.position += m_Velocity;
         RotateToVelocity(m_Velocity);
     }
 
@@ -90,7 +112,7 @@ public class SFCharacter : MonoBehaviour
         Vector3 desiredDirection = m_CharacterAgent.steeringTarget - this.transform.position;
         desiredDirection.Normalize();
 
-        Vector3 drivingForce = (m_DesiredSpeed * desiredDirection - m_Velocity) / relaxationT;
+        Vector3 drivingForce = (m_Params.DesiredSpeed * desiredDirection - m_Velocity) / relaxationT;
 
         return drivingForce;
     }
