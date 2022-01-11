@@ -90,7 +90,7 @@ public class SFManager : MonoBehaviour
             float angularInteractionRangeLarge = currentAgent.Parameters.AngInteractRangeLarge;
             float repulsiveStrength = currentAgent.Parameters.AgentRepulsiveStrength;
 
-            agentRepulsiveForce += CalculateRepulsive(currentAgent, otherAgent.transform.position, otherAgent.Velocity, directionWeight, rangeDirectionFactor, angularInteractionRange, angularInteractionRangeLarge, repulsiveStrength);
+            agentRepulsiveForce += CalculateRepulsive(currentAgent.transform.position, currentAgent.Velocity, otherAgent.transform.position, otherAgent.Velocity, directionWeight, rangeDirectionFactor, angularInteractionRange, angularInteractionRangeLarge, repulsiveStrength);
         }
         return agentRepulsiveForce;
     }
@@ -106,12 +106,12 @@ public class SFManager : MonoBehaviour
             float angularInteractionRangeLarge = currentAgent.Parameters.AngInteractRangeLarge;
             float repulsiveStrength = currentAgent.Parameters.ObstacleRepulsiveStrength;
 
-            obstacleRepulsiveForce += CalculateRepulsive(currentAgent, obstacle.transform.position, Vector3.zero, directionWeight, rangeDirectionFactor, angularInteractionRange, angularInteractionRangeLarge, repulsiveStrength); //Obstacles do not move, they have a velocity of 0
+            obstacleRepulsiveForce += CalculateRepulsive(currentAgent.transform.position, currentAgent.Velocity, obstacle.transform.position, Vector3.zero, directionWeight, rangeDirectionFactor, angularInteractionRange, angularInteractionRangeLarge, repulsiveStrength); //Obstacles do not move, they have a velocity of 0
         }
         return obstacleRepulsiveForce;
     }
 
-    private Vector3 CalculateRepulsive(SFCharacter currentAgent, Vector3 otherPosition, Vector3 otherVelocity, float dirWeight, float rangeDirFactor, float angInterRange, float angInterRangeLarge, float repStrength)
+    private Vector3 CalculateRepulsive(Vector3 agentPosition, Vector3 agentVelocity, Vector3 otherPosition, Vector3 otherVelocity, float dirWeight, float rangeDirFactor, float angInterRange, float angInterRangeLarge, float repStrength)
     {
         /*const float directionWeight = 2.0f;
         const float rangeDirectionFactor = 0.40f;
@@ -122,7 +122,7 @@ public class SFManager : MonoBehaviour
         Vector3 interactionForce = new Vector3(0f, 0f, 0f);
 
         Vector3 vectorToAgent = new Vector3();
-        vectorToAgent = otherPosition - currentAgent.transform.position;
+        vectorToAgent = otherPosition - agentPosition;
 
         // Skip if agent is too far
         const int minDistance = 10;
@@ -132,7 +132,7 @@ public class SFManager : MonoBehaviour
         }
 
         Vector3 directionToAgent = vectorToAgent.normalized;
-        Vector3 interactionVector = dirWeight * (currentAgent.Velocity - otherVelocity) + directionToAgent;
+        Vector3 interactionVector = dirWeight * (agentVelocity - otherVelocity) + directionToAgent;
 
         float interactionRange = rangeDirFactor * Vector3.Magnitude(interactionVector);
 

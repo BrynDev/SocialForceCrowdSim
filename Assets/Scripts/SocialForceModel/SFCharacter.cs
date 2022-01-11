@@ -8,7 +8,9 @@ public enum PersonalityType
     cautious
 }
 
-public struct CharacterParameters
+// This type is a class instead of a struct because a class is a reference type
+// Hundreds of agents each having an instance of a large data container like a CharacterParameters object causes a significant performance loss
+public class CharacterParameters
 {
     // Type
     private PersonalityType m_Type;
