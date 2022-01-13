@@ -2640,9 +2640,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AgentParentTransform: {fileID: 1828954}
   m_AgentPrefab: {fileID: 1642887807717105375, guid: bffa9f1b97044e144b98401d1f7d2f6b, type: 3}
-  m_NrStandardAgents: 100
-  m_NrAgressiveAgents: 15
-  m_NrCautiousAgents: 15
+  m_NrStandardAgents: 2
+  m_NrAgressiveAgents: 2
+  m_NrCautiousAgents: 2
   m_SpawnDelay: 0.5
 --- !u!4 &888260799 stripped
 Transform:

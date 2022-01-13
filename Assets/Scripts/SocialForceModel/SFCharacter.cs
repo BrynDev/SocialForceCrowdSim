@@ -79,6 +79,31 @@ public class SFCharacter : MonoBehaviour
             m_Params = value;
             // speed requires a separate assignment because it is used by the NavmeshAgent component
             m_CharacterAgent.speed = value.DesiredSpeed;
+
+            // Find the renderer component instead of using a serialize field to save on memory usage
+            // memory usage is important to consider due to the large amount of agents in the scene
+            Renderer mainRenderer = transform.GetChild(0).GetComponent<Renderer>();
+            if (mainRenderer != null)
+            {
+                // Also get the renderer of the front object
+                Renderer frontRenderer = mainRenderer.gameObject.transform.GetChild(0).GetComponent<Renderer>();
+                switch (m_Params.Type)
+                {
+                    case PersonalityType.agressive:
+                        Color agressiveColor = new Color(1.0f, 0.4f, 0.4f);
+                        mainRenderer.material.color = agressiveColor;
+                        frontRenderer.material.color = agressiveColor;
+                        break;
+                    case PersonalityType.cautious:
+                        Color cautiousColor = new Color(0.8f, 0.8f, 0.1f);
+                        mainRenderer.material.color = cautiousColor;
+                        frontRenderer.material.color = cautiousColor;
+                        break;
+                    default:
+                        // Standard types do not get their color changed
+                        break;
+                }
+            }
         } 
     }
 
@@ -96,7 +121,12 @@ public class SFCharacter : MonoBehaviour
             m_CharacterAgent.Warp(m_Destination.position);
         }
 
-        m_CharacterAgent.stoppingDistance = 1.5f;
+        m_CharacterAgent.stoppingDistance = 1.5f;      
+    }
+
+    private void Start()
+    {
+        
     }
 
     // Update is called once per frame

@@ -10,27 +10,6 @@ public class SimulationSettings : MonoBehaviour
     [SerializeField] private int m_NrCautiousAgents = 10;
     [SerializeField] private float m_SpawnDelay = 0.5f;
 
-    /*
-    [Header("Obstacle repulsive force")]
-    [SerializeField] private float m_ObstacleRepulsiveWeight = 1.0f;
-    [SerializeField] private float m_ObstacleRepulsiveStrength = 47.0f;
-    [SerializeField] private float m_ObstacleRepulsiveRange;
-
-    [Header("Agent repulsive force")]
-    [SerializeField] private float m_AgentRepulsiveWeight = 1.0f;
-    [SerializeField] private float m_AgentRepulsiveStrength = 47.0f;
-    [SerializeField] private float m_AgentRepulsiveRange;
-
-    [Header("Wall repulsive force")]
-    [SerializeField] private float m_WallRepulsiveWeight = 1.0f;
-    [SerializeField] private float m_WallRepulsiveStrength = 2.0f;
-    [SerializeField] private float m_WallRepulsiveRange = 0.4f;
-
-    [Header("Driving force")]
-    [SerializeField] private float m_DrivingWeight = 1.0f;
-    [SerializeField] private float m_AgentDesiredSpeed = 0.5f;
-    */
-
     private float m_ElapsedTime;
     private int m_SpawnedStandardAgentCount = 0;
     private int m_SpawnedAgressiveAgentCount = 0;
@@ -113,6 +92,7 @@ public class SimulationSettings : MonoBehaviour
     private CharacterParameters CreateStandardParameters()
     {
         CharacterParameters charParams = new CharacterParameters();
+        charParams.Type = PersonalityType.standard;
 
         //Obstacle repulsive
         charParams.ObstacleRepulsiveWeight = 1.0f;
@@ -145,6 +125,7 @@ public class SimulationSettings : MonoBehaviour
     private CharacterParameters CreateAgressiveParameters()
     {
         CharacterParameters charParams = new CharacterParameters();
+        charParams.Type = PersonalityType.agressive;
 
         //Obstacle repulsive
         charParams.ObstacleRepulsiveWeight = 1.0f;
@@ -177,6 +158,7 @@ public class SimulationSettings : MonoBehaviour
     private CharacterParameters CreateCautiousParameters()
     {
         CharacterParameters charParams = new CharacterParameters();
+        charParams.Type = PersonalityType.cautious;
 
         //Obstacle repulsive
         charParams.ObstacleRepulsiveWeight = 1.0f;
