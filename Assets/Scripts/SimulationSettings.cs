@@ -41,36 +41,49 @@ public class SimulationSettings : MonoBehaviour
 
         if(m_ElapsedTime >= m_SpawnDelay)
         {
-            CharacterParameters newParams;
+            CharacterParameters newParams = null;
            
             //Give the newly spawned agent the correct parameters according to personality type
             switch(m_NextTypeToSpawn)
             {
                 case PersonalityType.standard:
-                    //newParams = CreateStandardParameters();
-                    newParams = m_StandardParams;
-                    ++m_SpawnedStandardAgentCount;
-                    if(m_SpawnedStandardAgentCount >= m_NrStandardAgents)
+                    if (m_SpawnedStandardAgentCount < m_NrStandardAgents)
+                    {
+                        newParams = m_StandardParams;
+                        ++m_SpawnedStandardAgentCount;
+                        
+                    }
+                    else
                     {
                         ++m_NextTypeToSpawn;
-                    }
+                    }     
+                    
                     break;
                 case PersonalityType.agressive:
-                    //newParams = CreateAgressiveParameters();
-                    newParams = m_AgressiveParams;
-                    ++m_SpawnedAgressiveAgentCount;
-                    if (m_SpawnedAgressiveAgentCount >= m_NrAgressiveAgents)
+                    if (m_SpawnedAgressiveAgentCount < m_NrAgressiveAgents)
+                    {
+                        newParams = m_AgressiveParams;
+                        ++m_SpawnedAgressiveAgentCount;
+                        
+                    }
+                    else
                     {
                         ++m_NextTypeToSpawn;
                     }
+                    
                     break;
                 case PersonalityType.cautious:
-                    newParams = m_CautiousParams;
-                    ++m_SpawnedCautiousAgentCount;
-                    if (m_SpawnedCautiousAgentCount >= m_NrCautiousAgents)
+                    if (m_SpawnedCautiousAgentCount < m_NrCautiousAgents)
+                    {
+                        newParams = m_CautiousParams;
+                        ++m_SpawnedCautiousAgentCount;
+                        
+                    }
+                    else
                     {
                         ++m_NextTypeToSpawn;
                     }
+                    
                     break;
                default:
                     // No more known types to spawn, therefore stop spawning
@@ -81,10 +94,13 @@ public class SimulationSettings : MonoBehaviour
                     return;
             }
 
-            // Spawn agent and assign parameters
-            GameObject spawnedAgent = Instantiate(m_AgentPrefab, m_AgentParentTransform);
-            spawnedAgent.GetComponent<SFCharacter>().Parameters = newParams;
-                      
+            if(newParams != null)
+            {
+                // Spawn agent and assign parameters
+                GameObject spawnedAgent = Instantiate(m_AgentPrefab, m_AgentParentTransform);
+                spawnedAgent.GetComponent<SFCharacter>().Parameters = newParams;
+            }
+                                
             m_ElapsedTime = 0.0f;          
         }        
     }
@@ -129,19 +145,19 @@ public class SimulationSettings : MonoBehaviour
 
         //Obstacle repulsive
         charParams.ObstacleRepulsiveWeight = 1.0f;
-        charParams.ObstacleRepulsiveStrength = 47.0f;
-        charParams.ObstacleRepulsiveRange = 10.0f;
+        charParams.ObstacleRepulsiveStrength = 25.0f;
+        charParams.ObstacleRepulsiveRange = 4.0f;
 
         //Agent repulsive
-        charParams.AgentRepulsiveWeight = 1.0f;
-        charParams.AgentRepulsiveStrength = 47.0f;
-        charParams.AgentRepulsiveRange = 10.0f;
+        charParams.AgentRepulsiveWeight = 0.5f;
+        charParams.AgentRepulsiveStrength = 30.0f;
+        charParams.AgentRepulsiveRange = 4.5f;
 
         //General repulsive
-        charParams.DirectionWeight = 2.0f;
-        charParams.RangeDirFactor = 0.4f;
-        charParams.AngInteractRange = 2.0f;
-        charParams.AngInteractRangeLarge = 3.0f;
+        charParams.DirectionWeight = 2.2f;
+        charParams.RangeDirFactor = 0.6f;
+        charParams.AngInteractRange = 0.5f;
+        charParams.AngInteractRangeLarge = 0.9f;
 
         //Wall repulsive
         charParams.WallRepulsiveWeight = 1.0f;
@@ -149,8 +165,8 @@ public class SimulationSettings : MonoBehaviour
         charParams.WallRepulsiveRange = 0.4f;
 
         //Driving force
-        charParams.DrivingWeight = 1.0f;
-        charParams.DesiredSpeed = 0.5f;
+        charParams.DrivingWeight = 1.1f;
+        charParams.DesiredSpeed = 0.7f;
 
         return charParams;
     }
@@ -177,13 +193,13 @@ public class SimulationSettings : MonoBehaviour
         charParams.AngInteractRangeLarge = 3.0f;
 
         //Wall repulsive
-        charParams.WallRepulsiveWeight = 1.0f;
-        charParams.WallRepulsiveStrength = 2.0f;
-        charParams.WallRepulsiveRange = 0.4f;
+        charParams.WallRepulsiveWeight = 1.2f;
+        charParams.WallRepulsiveStrength = 3.2f;
+        charParams.WallRepulsiveRange = 0.8f;
 
         //Driving force
         charParams.DrivingWeight = 1.0f;
-        charParams.DesiredSpeed = 0.5f;
+        charParams.DesiredSpeed = 0.4f;
 
         return charParams;
     }

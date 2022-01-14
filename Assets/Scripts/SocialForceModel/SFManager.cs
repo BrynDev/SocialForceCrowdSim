@@ -84,13 +84,14 @@ public class SFManager : MonoBehaviour
                 continue;
             }
 
+            float range = currentAgent.Parameters.AgentRepulsiveRange;
             float directionWeight = currentAgent.Parameters.DirectionWeight;
             float rangeDirectionFactor = currentAgent.Parameters.RangeDirFactor;
             float angularInteractionRange = currentAgent.Parameters.AngInteractRange;
             float angularInteractionRangeLarge = currentAgent.Parameters.AngInteractRangeLarge;
             float repulsiveStrength = currentAgent.Parameters.AgentRepulsiveStrength;
 
-            agentRepulsiveForce += CalculateRepulsive(currentAgent.transform.position, currentAgent.Velocity, otherAgent.transform.position, otherAgent.Velocity, directionWeight, rangeDirectionFactor, angularInteractionRange, angularInteractionRangeLarge, repulsiveStrength);
+            agentRepulsiveForce += CalculateRepulsive(currentAgent.transform.position, currentAgent.Velocity, otherAgent.transform.position, otherAgent.Velocity, range, directionWeight, rangeDirectionFactor, angularInteractionRange, angularInteractionRangeLarge, repulsiveStrength);
         }
         return agentRepulsiveForce;
     }
@@ -100,18 +101,19 @@ public class SFManager : MonoBehaviour
         Vector3 obstacleRepulsiveForce = new Vector3();
         foreach (SFObstacle obstacle in m_Obstacles)
         {
+            float range = currentAgent.Parameters.ObstacleRepulsiveRange;
             float directionWeight = currentAgent.Parameters.DirectionWeight;
             float rangeDirectionFactor = currentAgent.Parameters.RangeDirFactor;
             float angularInteractionRange = currentAgent.Parameters.AngInteractRange;
             float angularInteractionRangeLarge = currentAgent.Parameters.AngInteractRangeLarge;
             float repulsiveStrength = currentAgent.Parameters.ObstacleRepulsiveStrength;
 
-            obstacleRepulsiveForce += CalculateRepulsive(currentAgent.transform.position, currentAgent.Velocity, obstacle.transform.position, Vector3.zero, directionWeight, rangeDirectionFactor, angularInteractionRange, angularInteractionRangeLarge, repulsiveStrength); //Obstacles do not move, they have a velocity of 0
+            obstacleRepulsiveForce += CalculateRepulsive(currentAgent.transform.position, currentAgent.Velocity, obstacle.transform.position, Vector3.zero, range, directionWeight, rangeDirectionFactor, angularInteractionRange, angularInteractionRangeLarge, repulsiveStrength); //Obstacles do not move, they have a velocity of 0
         }
         return obstacleRepulsiveForce;
     }
 
-    private Vector3 CalculateRepulsive(Vector3 agentPosition, Vector3 agentVelocity, Vector3 otherPosition, Vector3 otherVelocity, float dirWeight, float rangeDirFactor, float angInterRange, float angInterRangeLarge, float repStrength)
+    private Vector3 CalculateRepulsive(Vector3 agentPosition, Vector3 agentVelocity, Vector3 otherPosition, Vector3 otherVelocity, float range, float dirWeight, float rangeDirFactor, float angInterRange, float angInterRangeLarge, float repStrength)
     {
         /*const float directionWeight = 2.0f;
         const float rangeDirectionFactor = 0.40f;
@@ -125,8 +127,7 @@ public class SFManager : MonoBehaviour
         vectorToAgent = otherPosition - agentPosition;
 
         // Skip if agent is too far
-        const int minDistance = 10;
-        if (Vector3.SqrMagnitude(vectorToAgent) > minDistance * minDistance)
+        if (Vector3.SqrMagnitude(vectorToAgent) > range * range)
         {
             return Vector3.zero;
         }
