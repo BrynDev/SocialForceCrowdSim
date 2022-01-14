@@ -145,17 +145,17 @@ public class SimulationSettings : MonoBehaviour
 
         //Obstacle repulsive
         charParams.ObstacleRepulsiveWeight = 1.0f;
-        charParams.ObstacleRepulsiveStrength = 25.0f;
+        charParams.ObstacleRepulsiveStrength = 38.0f;
         charParams.ObstacleRepulsiveRange = 4.0f;
 
         //Agent repulsive
-        charParams.AgentRepulsiveWeight = 0.5f;
-        charParams.AgentRepulsiveStrength = 30.0f;
-        charParams.AgentRepulsiveRange = 4.5f;
+        charParams.AgentRepulsiveWeight = 0.9f;
+        charParams.AgentRepulsiveStrength = 25.0f;
+        charParams.AgentRepulsiveRange = 8.0f;
 
         //General repulsive
         charParams.DirectionWeight = 2.2f;
-        charParams.RangeDirFactor = 0.6f;
+        charParams.RangeDirFactor = 0.3f;
         charParams.AngInteractRange = 0.5f;
         charParams.AngInteractRangeLarge = 0.9f;
 
@@ -178,28 +178,28 @@ public class SimulationSettings : MonoBehaviour
 
         //Obstacle repulsive
         charParams.ObstacleRepulsiveWeight = 1.0f;
-        charParams.ObstacleRepulsiveStrength = 47.0f;
+        charParams.ObstacleRepulsiveStrength = 60.0f;
         charParams.ObstacleRepulsiveRange = 10.0f;
 
         //Agent repulsive
         charParams.AgentRepulsiveWeight = 1.0f;
-        charParams.AgentRepulsiveStrength = 47.0f;
+        charParams.AgentRepulsiveStrength = 60.0f;
         charParams.AgentRepulsiveRange = 10.0f;
 
         //General repulsive
         charParams.DirectionWeight = 2.0f;
-        charParams.RangeDirFactor = 0.4f;
+        charParams.RangeDirFactor = 0.7f;
         charParams.AngInteractRange = 2.0f;
         charParams.AngInteractRangeLarge = 3.0f;
 
         //Wall repulsive
-        charParams.WallRepulsiveWeight = 1.2f;
-        charParams.WallRepulsiveStrength = 3.2f;
+        charParams.WallRepulsiveWeight = 1.0f;
+        charParams.WallRepulsiveStrength = 2.8f;
         charParams.WallRepulsiveRange = 0.8f;
 
         //Driving force
         charParams.DrivingWeight = 1.0f;
-        charParams.DesiredSpeed = 0.4f;
+        charParams.DesiredSpeed = 0.3f;
 
         return charParams;
     }

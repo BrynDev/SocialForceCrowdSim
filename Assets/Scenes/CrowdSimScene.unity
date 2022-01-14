@@ -2640,8 +2640,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AgentParentTransform: {fileID: 1828954}
   m_AgentPrefab: {fileID: 1642887807717105375, guid: bffa9f1b97044e144b98401d1f7d2f6b, type: 3}
-  m_NrStandardAgents: 50
-  m_NrAgressiveAgents: 5
+  m_NrStandardAgents: 10
+  m_NrAgressiveAgents: 20
   m_NrCautiousAgents: 50
   m_SpawnDelay: 0.5
 --- !u!4 &888260799 stripped
@@ -3588,7 +3588,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4276136330589743321, guid: 3c1b760457db2964d9e801c414e5cc31, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 80.31
+      value: 82.54
       objectReference: {fileID: 0}
     - target: {fileID: 4276136330589743321, guid: 3c1b760457db2964d9e801c414e5cc31, type: 3}
       propertyPath: m_LocalRotation.w
