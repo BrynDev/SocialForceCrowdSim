@@ -8,19 +8,22 @@ public class SimulationSettings : MonoBehaviour
     [SerializeField] private int m_NrStandardAgents = 10;
     [SerializeField] private int m_NrAgressiveAgents = 10;
     [SerializeField] private int m_NrCautiousAgents = 10;
+    [SerializeField] private int m_NrDistractedAgents = 10;
     [SerializeField] private float m_SpawnDelay = 0.5f;
 
     private float m_ElapsedTime;
     private int m_SpawnedStandardAgentCount = 0;
     private int m_SpawnedAgressiveAgentCount = 0;
     private int m_SpawnedCautiousAgentCount = 0;
+    private int m_SpawnedDistractedAgentCount = 0;
     private bool m_CanSpawn = true;
     private PersonalityType m_NextTypeToSpawn = PersonalityType.standard;
 
     private CharacterParameters m_StandardParams;
     private CharacterParameters m_AgressiveParams;
     private CharacterParameters m_CautiousParams;
-    
+    private CharacterParameters m_DistractedParams;
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -28,6 +31,7 @@ public class SimulationSettings : MonoBehaviour
         m_StandardParams = CreateStandardParameters();
         m_AgressiveParams = CreateAgressiveParameters();
         m_CautiousParams = CreateCautiousParameters();
+        m_DistractedParams = CreateDistractedParameters();
     }
 
     private void Update()
@@ -135,6 +139,11 @@ public class SimulationSettings : MonoBehaviour
         charParams.DrivingWeight = 1.0f;
         charParams.DesiredSpeed = 0.5f;
 
+        //Attractice force
+        charParams.AttractiveWeight = 0.1f;
+        charParams.AttractiveStrength = 2.2f;
+        charParams.AttractiveRange = 10.0f;
+
         return charParams;
     }
 
@@ -168,6 +177,16 @@ public class SimulationSettings : MonoBehaviour
         charParams.DrivingWeight = 1.1f;
         charParams.DesiredSpeed = 0.7f;
 
+        //Attractice force
+        charParams.AttractiveWeight = 0.2f;
+        charParams.AttractiveStrength = 5.0f;
+        charParams.AttractiveRange = 8.0f;
+
+        //Attractice force
+        charParams.AttractiveWeight = 0.1f;
+        charParams.AttractiveStrength = 2.2f;
+        charParams.AttractiveRange = 10.0f;
+
         return charParams;
     }
 
@@ -200,6 +219,49 @@ public class SimulationSettings : MonoBehaviour
         //Driving force
         charParams.DrivingWeight = 1.0f;
         charParams.DesiredSpeed = 0.3f;
+
+        //Attractice force
+        charParams.AttractiveWeight = 0.1f;
+        charParams.AttractiveStrength = 2.0f;
+        charParams.AttractiveRange = 10.0f;
+
+        return charParams;
+    }
+
+    private CharacterParameters CreateDistractedParameters()
+    {
+        CharacterParameters charParams = new CharacterParameters();
+        charParams.Type = PersonalityType.standard;
+
+        //Obstacle repulsive
+        charParams.ObstacleRepulsiveWeight = 0.8f;
+        charParams.ObstacleRepulsiveStrength = 47.0f;
+        charParams.ObstacleRepulsiveRange = 10.0f;
+
+        //Agent repulsive
+        charParams.AgentRepulsiveWeight = 1.0f;
+        charParams.AgentRepulsiveStrength = 47.0f;
+        charParams.AgentRepulsiveRange = 10.0f;
+
+        //General repulsive
+        charParams.DirectionWeight = 2.0f;
+        charParams.RangeDirFactor = 0.4f;
+        charParams.AngInteractRange = 2.0f;
+        charParams.AngInteractRangeLarge = 3.0f;
+
+        //Wall repulsive
+        charParams.WallRepulsiveWeight = 0.8f;
+        charParams.WallRepulsiveStrength = 2.0f;
+        charParams.WallRepulsiveRange = 0.4f;
+
+        //Driving force
+        charParams.DrivingWeight = 1.0f;
+        charParams.DesiredSpeed = 0.5f;
+
+        //Attractice force
+        charParams.AttractiveWeight = 0.1f;
+        charParams.AttractiveStrength = 2.2f;
+        charParams.AttractiveRange = 10.0f;
 
         return charParams;
     }

@@ -7,6 +7,7 @@ public class SFManager : MonoBehaviour
     private List<SFObstacle> m_Obstacles = new List<SFObstacle>();
     private List<Wall> m_Walls = new List<Wall>();
     private List<GameObject> m_Destinations = new List<GameObject>();
+    private List<GameObject> m_Attractors = new List<GameObject>();
     private int m_NextDestIndex = 0;
 
     private void Awake()
@@ -27,6 +28,12 @@ public class SFManager : MonoBehaviour
         foreach (GameObject destination in destArray)
         {
             m_Destinations.Add(destination);
+        }
+
+        GameObject[] attractArray = GameObject.FindGameObjectsWithTag("Attractor");
+        foreach (GameObject attractor in attractArray)
+        {
+            m_Attractors.Add(attractor);
         }
 
     }
@@ -156,11 +163,8 @@ public class SFManager : MonoBehaviour
         return interactionForce;
     }
 
-    public Vector3 CalculateWallRepulsiveForce(SFCharacter currentAgent)
-    {
-        float repulsiveStrength = currentAgent.Parameters.WallRepulsiveStrength;
-        float repulsiveRange = currentAgent.Parameters.WallRepulsiveRange;
-
+    public Vector3 CalculateWallRepulsiveForce(Vector3 agentPosition, float agentRadius, float forceRange, float forceStrength)
+    {       
         float squaredDistToObject = Mathf.Infinity;
         
         float minSquaredDist = Mathf.Infinity;
@@ -169,7 +173,7 @@ public class SFManager : MonoBehaviour
         // Find distance to nearest wall
         foreach (Wall wall in m_Walls)
         {
-            Vector3 vectorNearestPointToAgent = currentAgent.transform.position - wall.GetNearestPoint(currentAgent.transform.position);
+            Vector3 vectorNearestPointToAgent = agentPosition - wall.GetNearestPoint(agentPosition);
             float squaredDist = Vector3.SqrMagnitude(vectorNearestPointToAgent);
 
             if (squaredDist < minSquaredDist)
@@ -181,14 +185,32 @@ public class SFManager : MonoBehaviour
         }
 
         
-        float distToNearestObs = Mathf.Sqrt(squaredDistToObject) - currentAgent.Radius;
+        float distToNearestObs = Mathf.Sqrt(squaredDistToObject) - agentRadius;
 
-        float interactionForce = repulsiveStrength * Mathf.Exp(-distToNearestObs / repulsiveRange);
+        float interactionForce = forceStrength * Mathf.Exp(-distToNearestObs / forceRange);
 
         minDistVector.Normalize();
         minDistVector.y = 0;
         Vector3 obsInteractForce = interactionForce * minDistVector.normalized;
 
         return obsInteractForce;
+    }
+
+    public Vector3 CalculateAttractive(Vector3 agentPosition, float agentRadius, float forceRange, float forceStrength)
+    {
+        Vector3 repulsiveForce = new Vector3();
+        foreach (GameObject attractor in m_Attractors)
+        {
+            Vector3 vectorToAgent = attractor.transform.position - agentPosition;
+            if(vectorToAgent.sqrMagnitude > forceRange * forceRange)
+            {
+                continue;
+            }
+            float distanceToObstacle = vectorToAgent.magnitude;
+            vectorToAgent.Normalize();
+            repulsiveForce += forceStrength * Mathf.Exp((distanceToObstacle - agentRadius) / forceRange) * vectorToAgent;
+        }
+        repulsiveForce.y = 0.0f;
+        return repulsiveForce;
     }
 }

@@ -5,7 +5,8 @@ public enum PersonalityType
 {
     standard,
     agressive,
-    cautious
+    cautious,
+    distracted
 }
 
 // This type is a class instead of a struct because a class is a reference type
@@ -55,6 +56,14 @@ public class CharacterParameters
     public float DrivingWeight { get { return m_DrivingWeight; } set { m_DrivingWeight = value; } }
     private float m_DesiredSpeed;
     public float DesiredSpeed { get { return m_DesiredSpeed; } set { m_DesiredSpeed = value; } }
+
+    //Attractive force
+    private float m_AttractiveWeight;
+    public float AttractiveWeight { get { return m_AttractiveWeight; } set { m_AttractiveWeight = value; } }
+    private float m_AttractiveStrength;
+    public float AttractiveStrength { get { return m_AttractiveStrength; } set { m_AttractiveStrength = value; } }
+    private float m_AttractiveRange;
+    public float AttractiveRange { get { return m_AttractiveRange; } set { m_AttractiveRange = value; } }
 }
 
 public class SFCharacter : MonoBehaviour
@@ -99,6 +108,11 @@ public class SFCharacter : MonoBehaviour
                         mainRenderer.material.color = cautiousColor;
                         frontRenderer.material.color = cautiousColor;
                         break;
+                    case PersonalityType.distracted:
+                        Color distractedColor = new Color(0.7f, 0.2f, 0.7f);
+                        mainRenderer.material.color = distractedColor;
+                        frontRenderer.material.color = distractedColor;
+                        break;
                     default:
                         // Standard types do not get their color changed
                         break;
@@ -124,11 +138,6 @@ public class SFCharacter : MonoBehaviour
         m_CharacterAgent.stoppingDistance = 1.5f;      
     }
 
-    private void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -140,16 +149,19 @@ public class SFCharacter : MonoBehaviour
         Vector3 drivingForce = m_Params.DrivingWeight * DrivingForce();
         Vector3 obstacleRepulsiveForce = m_Params.ObstacleRepulsiveWeight * m_SFManager.CalculateObstacleRepulsiveForce(this);
         Vector3 agentRepulsiveForce = m_Params.AgentRepulsiveWeight * m_SFManager.CalculateAgentRepulsiveForce(this);
-        Vector3 wallRepulsiveForce = m_Params.WallRepulsiveWeight * m_SFManager.CalculateWallRepulsiveForce(this);
-        Vector3 acceleration = drivingForce + obstacleRepulsiveForce + agentRepulsiveForce + wallRepulsiveForce;
-        m_Velocity = acceleration * Time.deltaTime;
+        Vector3 wallRepulsiveForce = m_Params.WallRepulsiveWeight * m_SFManager.CalculateWallRepulsiveForce(transform.position, m_Radius, m_Params.WallRepulsiveRange, m_Params.WallRepulsiveStrength);
+        Vector3 attractiveForce = m_Params.AttractiveWeight * m_SFManager.CalculateAttractive(transform.position, m_Radius, m_Params.AttractiveRange, m_Params.AttractiveStrength);
+        Vector3 acceleration = drivingForce + obstacleRepulsiveForce + agentRepulsiveForce + wallRepulsiveForce + attractiveForce;
+        m_Velocity = acceleration /** Time.deltaTime*/;
 
         // Limit maximum velocity
         if (Vector3.SqrMagnitude(m_Velocity) > m_Params.DesiredSpeed * m_Params.DesiredSpeed)
         {
             m_Velocity.Normalize();
             m_Velocity *= m_Params.DesiredSpeed;
-        }      
+        }
+
+        m_Velocity *= Time.deltaTime;
         
         transform.position += m_Velocity;
         RotateToVelocity(m_Velocity);
