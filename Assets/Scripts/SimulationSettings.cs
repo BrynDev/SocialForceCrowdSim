@@ -9,6 +9,7 @@ public class SimulationSettings : MonoBehaviour
     [SerializeField] private int m_NrAgressiveAgents = 10;
     [SerializeField] private int m_NrCautiousAgents = 10;
     [SerializeField] private int m_NrDistractedAgents = 10;
+    [SerializeField] private int m_NrRecklessAgents = 10;
     [SerializeField] private float m_SpawnDelay = 0.5f;
 
     private float m_ElapsedTime;
@@ -16,6 +17,7 @@ public class SimulationSettings : MonoBehaviour
     private int m_SpawnedAgressiveAgentCount = 0;
     private int m_SpawnedCautiousAgentCount = 0;
     private int m_SpawnedDistractedAgentCount = 0;
+    private int m_SpawnedRecklessAgentCount = 0;
     private bool m_CanSpawn = true;
     private PersonalityType m_NextTypeToSpawn = PersonalityType.standard;
 
@@ -23,6 +25,7 @@ public class SimulationSettings : MonoBehaviour
     private CharacterParameters m_AgressiveParams;
     private CharacterParameters m_CautiousParams;
     private CharacterParameters m_DistractedParams;
+    private CharacterParameters m_RecklessParams;
 
     // Start is called before the first frame update
     private void Start()
@@ -32,6 +35,7 @@ public class SimulationSettings : MonoBehaviour
         m_AgressiveParams = CreateAgressiveParameters();
         m_CautiousParams = CreateCautiousParameters();
         m_DistractedParams = CreateDistractedParameters();
+        m_RecklessParams = CreateRecklessParameters();
     }
 
     private void Update()
@@ -54,8 +58,7 @@ public class SimulationSettings : MonoBehaviour
                     if (m_SpawnedStandardAgentCount < m_NrStandardAgents)
                     {
                         newParams = m_StandardParams;
-                        ++m_SpawnedStandardAgentCount;
-                        
+                        ++m_SpawnedStandardAgentCount;                       
                     }
                     else
                     {
@@ -67,8 +70,7 @@ public class SimulationSettings : MonoBehaviour
                     if (m_SpawnedAgressiveAgentCount < m_NrAgressiveAgents)
                     {
                         newParams = m_AgressiveParams;
-                        ++m_SpawnedAgressiveAgentCount;
-                        
+                        ++m_SpawnedAgressiveAgentCount;                       
                     }
                     else
                     {
@@ -80,8 +82,7 @@ public class SimulationSettings : MonoBehaviour
                     if (m_SpawnedCautiousAgentCount < m_NrCautiousAgents)
                     {
                         newParams = m_CautiousParams;
-                        ++m_SpawnedCautiousAgentCount;
-                        
+                        ++m_SpawnedCautiousAgentCount;                      
                     }
                     else
                     {
@@ -89,7 +90,31 @@ public class SimulationSettings : MonoBehaviour
                     }
                     
                     break;
-               default:
+                case PersonalityType.distracted:
+                    if (m_SpawnedDistractedAgentCount < m_NrDistractedAgents)
+                    {
+                        newParams = m_DistractedParams;
+                        ++m_SpawnedDistractedAgentCount;
+                    }
+                    else
+                    {
+                        ++m_NextTypeToSpawn;
+                    }
+
+                    break;
+                case PersonalityType.reckless:
+                    if (m_SpawnedRecklessAgentCount < m_NrRecklessAgents)
+                    {
+                        newParams = m_RecklessParams;
+                        ++m_SpawnedRecklessAgentCount;
+                    }
+                    else
+                    {
+                        ++m_NextTypeToSpawn;
+                    }
+
+                    break;
+                default:
                     // No more known types to spawn, therefore stop spawning
                     m_ElapsedTime = 0.0f;
                     Debug.Log("Finished spawning agents");
@@ -154,8 +179,8 @@ public class SimulationSettings : MonoBehaviour
 
         //Obstacle repulsive
         charParams.ObstacleRepulsiveWeight = 1.0f;
-        charParams.ObstacleRepulsiveStrength = 38.0f;
-        charParams.ObstacleRepulsiveRange = 4.0f;
+        charParams.ObstacleRepulsiveStrength = 47.0f;
+        charParams.ObstacleRepulsiveRange = 10.0f;
 
         //Agent repulsive
         charParams.AgentRepulsiveWeight = 0.9f;
@@ -218,7 +243,7 @@ public class SimulationSettings : MonoBehaviour
 
         //Driving force
         charParams.DrivingWeight = 1.0f;
-        charParams.DesiredSpeed = 0.3f;
+        charParams.DesiredSpeed = 0.4f;
 
         //Attractice force
         charParams.AttractiveWeight = 0.1f;
@@ -231,21 +256,21 @@ public class SimulationSettings : MonoBehaviour
     private CharacterParameters CreateDistractedParameters()
     {
         CharacterParameters charParams = new CharacterParameters();
-        charParams.Type = PersonalityType.standard;
+        charParams.Type = PersonalityType.distracted;
 
         //Obstacle repulsive
-        charParams.ObstacleRepulsiveWeight = 0.8f;
+        charParams.ObstacleRepulsiveWeight = 0.9f;
         charParams.ObstacleRepulsiveStrength = 47.0f;
         charParams.ObstacleRepulsiveRange = 10.0f;
 
         //Agent repulsive
-        charParams.AgentRepulsiveWeight = 1.0f;
+        charParams.AgentRepulsiveWeight = 0.9f;
         charParams.AgentRepulsiveStrength = 47.0f;
         charParams.AgentRepulsiveRange = 10.0f;
 
         //General repulsive
-        charParams.DirectionWeight = 2.0f;
-        charParams.RangeDirFactor = 0.4f;
+        charParams.DirectionWeight = 2.2f;
+        charParams.RangeDirFactor = 0.3f;
         charParams.AngInteractRange = 2.0f;
         charParams.AngInteractRangeLarge = 3.0f;
 
@@ -256,7 +281,53 @@ public class SimulationSettings : MonoBehaviour
 
         //Driving force
         charParams.DrivingWeight = 1.0f;
-        charParams.DesiredSpeed = 0.5f;
+        charParams.DesiredSpeed = 0.6f;
+
+        //Attractice force
+        /*charParams.AttractiveWeight = 0.2f;
+        charParams.AttractiveStrength = 2.2f;
+        charParams.AttractiveRange = 12.0f;*/
+        charParams.AttractiveWeight = 0.1f;
+        charParams.AttractiveStrength = 3.0f;
+        charParams.AttractiveRange = 11.0f;
+
+        return charParams;
+    }
+
+    private CharacterParameters CreateRecklessParameters()
+    {
+        CharacterParameters charParams = new CharacterParameters();
+        charParams.Type = PersonalityType.reckless;
+
+        //Obstacle repulsive
+        charParams.ObstacleRepulsiveWeight = 1.0f;
+        charParams.ObstacleRepulsiveStrength = 38.0f;
+        charParams.ObstacleRepulsiveRange = 4.0f;
+
+        //Agent repulsive
+        charParams.AgentRepulsiveWeight = 1.0f;
+        charParams.AgentRepulsiveStrength = 47.0f;
+        charParams.AgentRepulsiveRange = 10.0f;
+
+        //General repulsive
+        charParams.DirectionWeight = 2.6f;
+        charParams.RangeDirFactor = 0.35f;
+        charParams.AngInteractRange = 0.7f;
+        charParams.AngInteractRangeLarge = 0.8f;
+
+        //Wall repulsive
+        charParams.WallRepulsiveWeight = 1.0f;
+        charParams.WallRepulsiveStrength = 2.0f;
+        charParams.WallRepulsiveRange = 0.4f;
+
+        //Driving force
+        charParams.DrivingWeight = 1.1f;
+        charParams.DesiredSpeed = 0.7f;
+
+        //Attractice force
+        charParams.AttractiveWeight = 0.2f;
+        charParams.AttractiveStrength = 5.0f;
+        charParams.AttractiveRange = 8.0f;
 
         //Attractice force
         charParams.AttractiveWeight = 0.1f;

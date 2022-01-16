@@ -6,7 +6,8 @@ public enum PersonalityType
     standard,
     agressive,
     cautious,
-    distracted
+    distracted,
+    reckless,
 }
 
 // This type is a class instead of a struct because a class is a reference type
@@ -112,6 +113,11 @@ public class SFCharacter : MonoBehaviour
                         Color distractedColor = new Color(0.7f, 0.2f, 0.7f);
                         mainRenderer.material.color = distractedColor;
                         frontRenderer.material.color = distractedColor;
+                        break;
+                    case PersonalityType.reckless:
+                        Color recklessColor = new Color(0.1f, 0.9f, 0.1f);
+                        mainRenderer.material.color = recklessColor;
+                        frontRenderer.material.color = recklessColor;
                         break;
                     default:
                         // Standard types do not get their color changed
