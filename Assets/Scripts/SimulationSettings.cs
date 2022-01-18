@@ -167,7 +167,7 @@ public class SimulationSettings : MonoBehaviour
         //Attractice force
         charParams.AttractiveWeight = 0.1f;
         charParams.AttractiveStrength = 2.2f;
-        charParams.AttractiveRange = 10.0f;
+        charParams.AttractiveRange = 5.0f;
 
         return charParams;
     }
@@ -210,7 +210,7 @@ public class SimulationSettings : MonoBehaviour
         //Attractice force
         charParams.AttractiveWeight = 0.1f;
         charParams.AttractiveStrength = 2.2f;
-        charParams.AttractiveRange = 10.0f;
+        charParams.AttractiveRange = 5.0f;
 
         return charParams;
     }
@@ -284,12 +284,9 @@ public class SimulationSettings : MonoBehaviour
         charParams.DesiredSpeed = 0.6f;
 
         //Attractice force
-        /*charParams.AttractiveWeight = 0.2f;
-        charParams.AttractiveStrength = 2.2f;
-        charParams.AttractiveRange = 12.0f;*/
         charParams.AttractiveWeight = 0.1f;
-        charParams.AttractiveStrength = 3.0f;
-        charParams.AttractiveRange = 11.0f;
+        charParams.AttractiveStrength = 4.0f;
+        charParams.AttractiveRange = 8.0f;
 
         return charParams;
     }
@@ -325,14 +322,9 @@ public class SimulationSettings : MonoBehaviour
         charParams.DesiredSpeed = 0.7f;
 
         //Attractice force
-        charParams.AttractiveWeight = 0.2f;
-        charParams.AttractiveStrength = 5.0f;
-        charParams.AttractiveRange = 8.0f;
-
-        //Attractice force
         charParams.AttractiveWeight = 0.1f;
         charParams.AttractiveStrength = 2.2f;
-        charParams.AttractiveRange = 10.0f;
+        charParams.AttractiveRange = 5.0f;
 
         return charParams;
     }
