@@ -27,7 +27,9 @@ public class SimulationSettings : MonoBehaviour
     private CharacterParameters m_DistractedParams;
     private CharacterParameters m_RecklessParams;
 
-    // Start is called before the first frame update
+    //TEMP
+    private SFManager m_SFManager;
+
     private void Start()
     {
         Debug.Log("Started spawning agents");
@@ -36,6 +38,7 @@ public class SimulationSettings : MonoBehaviour
         m_CautiousParams = CreateCautiousParameters();
         m_DistractedParams = CreateDistractedParameters();
         m_RecklessParams = CreateRecklessParameters();
+        m_SFManager = GetComponent<SFManager>();
     }
 
     private void Update()
@@ -119,6 +122,8 @@ public class SimulationSettings : MonoBehaviour
                     m_ElapsedTime = 0.0f;
                     Debug.Log("Finished spawning agents");
                     m_CanSpawn = false;
+                    //TEMP
+                    m_SFManager.StartRecording();
                     // Spawning has stopped, exit this function to avoid spawning an extra agent
                     return;
             }
@@ -237,7 +242,7 @@ public class SimulationSettings : MonoBehaviour
         charParams.AngInteractRangeLarge = 3.0f;
 
         //Wall repulsive
-        charParams.WallRepulsiveWeight = 1.0f;
+        charParams.WallRepulsiveWeight = 1.1f;
         charParams.WallRepulsiveStrength = 2.8f;
         charParams.WallRepulsiveRange = 0.8f;
 
@@ -275,7 +280,7 @@ public class SimulationSettings : MonoBehaviour
         charParams.AngInteractRangeLarge = 3.0f;
 
         //Wall repulsive
-        charParams.WallRepulsiveWeight = 0.8f;
+        charParams.WallRepulsiveWeight = 0.9f;
         charParams.WallRepulsiveStrength = 2.0f;
         charParams.WallRepulsiveRange = 0.4f;
 

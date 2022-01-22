@@ -10,8 +10,18 @@ public class SFManager : MonoBehaviour
     private List<GameObject> m_Attractors = new List<GameObject>();
     private int m_NextDestIndex = 0;
 
+    //TEMP
+    private bool m_CanRecord = false;
+    private List<float> m_RecordedTimes = new List<float>(5);
+    private int m_RecordedCount;
+
     private void Awake()
     {
+        for(int i = 0; i < 5; ++i)
+        {
+            m_RecordedTimes.Add(0);
+        }
+       
         GameObject[] obstacleArray = GameObject.FindGameObjectsWithTag("Obstacle");
         foreach (GameObject obstacle in obstacleArray)
         {
@@ -212,5 +222,26 @@ public class SFManager : MonoBehaviour
         }
         repulsiveForce.y = 0.0f;
         return repulsiveForce;
+    }
+
+    public void StartRecording()
+    {
+        m_CanRecord = true;
+    }
+
+    public bool IsRecording()
+    {
+        return m_CanRecord;
+    }
+
+    public void RecordTime(int agentType, float time)
+    {
+        m_RecordedTimes[agentType] += time;
+        ++m_RecordedCount;
+        if(m_RecordedCount >= m_Agents.Count)
+        {
+            Debug.Log("Recording complete");
+            m_CanRecord = false;
+        }
     }
 }
