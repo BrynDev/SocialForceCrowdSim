@@ -12,16 +12,11 @@ public class SFManager : MonoBehaviour
 
     //TEMP
     private bool m_CanRecord = false;
-    private List<float> m_RecordedTimes = new List<float>(5);
+    private List<float> m_RecordedTimes = new List<float>();
     private int m_RecordedCount;
 
     private void Awake()
-    {
-        for(int i = 0; i < 5; ++i)
-        {
-            m_RecordedTimes.Add(0);
-        }
-       
+    {       
         GameObject[] obstacleArray = GameObject.FindGameObjectsWithTag("Obstacle");
         foreach (GameObject obstacle in obstacleArray)
         {
@@ -46,6 +41,11 @@ public class SFManager : MonoBehaviour
             m_Attractors.Add(attractor);
         }
 
+        for (int i = 0; i < m_Destinations.Count; ++i)
+        {
+            m_RecordedTimes.Add(0);
+        }
+        m_RecordedTimes.TrimExcess();
     }
 
     public void AddAgent(SFCharacter agentToAdd)
@@ -227,6 +227,7 @@ public class SFManager : MonoBehaviour
     public void StartRecording()
     {
         m_CanRecord = true;
+        m_NextDestIndex = 0;
     }
 
     public bool IsRecording()
@@ -234,11 +235,11 @@ public class SFManager : MonoBehaviour
         return m_CanRecord;
     }
 
-    public void RecordTime(int agentType, float time)
+    public void RecordTime(int destIndex, float time)
     {
-        m_RecordedTimes[agentType] += time;
+        m_RecordedTimes[destIndex] = time;
         ++m_RecordedCount;
-        if(m_RecordedCount >= m_Agents.Count)
+        if(m_RecordedCount == m_Destinations.Count + 1)
         {
             Debug.Log("Recording complete");
             m_CanRecord = false;
