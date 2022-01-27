@@ -128,7 +128,6 @@ public class SimulationSettings : MonoBehaviour
                     spawnedAgent.GetComponent<SFCharacter>().Parameters = m_RecklessParams;
                     spawnedAgent.GetComponent<SFCharacter>().StartRecording();
                     // Spawning has stopped, exit this function to avoid spawning an extra agent
-                    // aa
                     return;
             }
 
