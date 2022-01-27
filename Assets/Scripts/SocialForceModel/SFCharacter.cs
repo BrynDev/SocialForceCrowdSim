@@ -126,12 +126,6 @@ public class SFCharacter : MonoBehaviour
             }
         } 
     }
-
-    //TEMP
-    private bool m_HasRecorded = false;
-    private bool m_IsRecording = false;
-    private float m_LastTimePoint = 0.0f;
-
     void Awake()
     {
         m_CharacterAgent = GetComponent<NavMeshAgent>();      
@@ -162,7 +156,7 @@ public class SFCharacter : MonoBehaviour
         Vector3 wallRepulsiveForce = m_Params.WallRepulsiveWeight * m_SFManager.CalculateWallRepulsiveForce(transform.position, m_Radius, m_Params.WallRepulsiveRange, m_Params.WallRepulsiveStrength);
         Vector3 attractiveForce = m_Params.AttractiveWeight * m_SFManager.CalculateAttractive(transform.position, m_Radius, m_Params.AttractiveRange, m_Params.AttractiveStrength);
         Vector3 acceleration = drivingForce + obstacleRepulsiveForce + agentRepulsiveForce + wallRepulsiveForce + attractiveForce;
-        m_Velocity = acceleration /** Time.deltaTime*/;
+        m_Velocity = acceleration;
 
         // Limit maximum velocity
         if (Vector3.SqrMagnitude(m_Velocity) > m_Params.DesiredSpeed * m_Params.DesiredSpeed)
@@ -181,7 +175,6 @@ public class SFCharacter : MonoBehaviour
     {
         const float relaxationT = 0.54f;
 
-        //Vector3 desiredDirection = destination.transform.position - this.transform.position;
         Vector3 desiredDirection = m_CharacterAgent.steeringTarget - this.transform.position;
         desiredDirection.Normalize();
 
@@ -211,22 +204,6 @@ public class SFCharacter : MonoBehaviour
         m_CharacterAgent.SetDestination(m_Destination.position);
         // Stop the navmesh agent from performing any movement - we want full manual control of agent movement
         m_CharacterAgent.isStopped = true;
-
-        if(m_SFManager.IsRecording())
-        {
-            if(!m_IsRecording)
-            {
-                m_LastTimePoint = Time.time;
-                m_IsRecording = true;
-            }
-            else if(!m_HasRecorded)
-            {
-                float timeTaken = Time.time - m_LastTimePoint;
-                m_SFManager.RecordTime((int)m_Params.Type, timeTaken);
-                m_IsRecording = false;
-                m_HasRecorded = true;
-            }
-        }
     }
 
     private void SetNextOrderedDestination()

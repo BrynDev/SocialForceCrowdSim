@@ -27,9 +27,6 @@ public class SimulationSettings : MonoBehaviour
     private CharacterParameters m_DistractedParams;
     private CharacterParameters m_RecklessParams;
 
-    //TEMP
-    private SFManager m_SFManager;
-
     private void Start()
     {
         Debug.Log("Started spawning agents");
@@ -38,7 +35,6 @@ public class SimulationSettings : MonoBehaviour
         m_CautiousParams = CreateCautiousParameters();
         m_DistractedParams = CreateDistractedParameters();
         m_RecklessParams = CreateRecklessParameters();
-        m_SFManager = GetComponent<SFManager>();
     }
 
     private void Update()
@@ -121,15 +117,7 @@ public class SimulationSettings : MonoBehaviour
                     // No more known types to spawn, therefore stop spawning
                     m_ElapsedTime = 0.0f;
                     Debug.Log("Finished spawning agents");
-                    m_CanSpawn = false;
-                    //TEMP
-                    m_SFManager.StartRecording();
-<<<<<<< HEAD
-                    GameObject spawnedAgent = Instantiate(m_AgentPrefab, m_AgentParentTransform);
-                    spawnedAgent.GetComponent<SFCharacter>().Parameters = m_RecklessParams;
-                    spawnedAgent.GetComponent<SFCharacter>().StartRecording();
-=======
->>>>>>> parent of 3e53dd4 (Measuring setup changes)
+                    m_CanSpawn = false;                  
                     // Spawning has stopped, exit this function to avoid spawning an extra agent
                     return;
             }

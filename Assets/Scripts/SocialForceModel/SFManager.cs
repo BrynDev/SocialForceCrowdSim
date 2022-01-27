@@ -10,18 +10,8 @@ public class SFManager : MonoBehaviour
     private List<GameObject> m_Attractors = new List<GameObject>();
     private int m_NextDestIndex = 0;
 
-    //TEMP
-    private bool m_CanRecord = false;
-    private List<float> m_RecordedTimes = new List<float>(5);
-    private int m_RecordedCount;
-
     private void Awake()
-    {
-        for(int i = 0; i < 5; ++i)
-        {
-            m_RecordedTimes.Add(0);
-        }
-       
+    {       
         GameObject[] obstacleArray = GameObject.FindGameObjectsWithTag("Obstacle");
         foreach (GameObject obstacle in obstacleArray)
         {
@@ -45,15 +35,6 @@ public class SFManager : MonoBehaviour
         {
             m_Attractors.Add(attractor);
         }
-
-<<<<<<< HEAD
-        for (int i = 0; i < m_Destinations.Count + 1; ++i)
-        {
-            m_RecordedTimes.Add(0);
-        }
-        m_RecordedTimes.TrimExcess();
-=======
->>>>>>> parent of 3e53dd4 (Measuring setup changes)
     }
 
     public void AddAgent(SFCharacter agentToAdd)
@@ -140,12 +121,6 @@ public class SFManager : MonoBehaviour
 
     private Vector3 CalculateRepulsive(Vector3 agentPosition, Vector3 agentVelocity, Vector3 otherPosition, Vector3 otherVelocity, float range, float dirWeight, float rangeDirFactor, float angInterRange, float angInterRangeLarge, float repStrength)
     {
-        /*const float directionWeight = 2.0f;
-        const float rangeDirectionFactor = 0.40f;
-        const float angularInteractionRangeLarge = 3.0f;
-        const float angularInteractionRange = 2.0f;
-        const float repulsiveStrength = 47f;*/
-
         Vector3 interactionForce = new Vector3(0f, 0f, 0f);
 
         Vector3 vectorToAgent = new Vector3();
@@ -175,7 +150,6 @@ public class SFManager : MonoBehaviour
         float deceleration = -repStrength * Mathf.Exp(-distanceToAgent / interactionRange - (angInterRangeLarge * interactionRange * interactionAngle) * (angInterRangeLarge * interactionRange * interactionAngle));
         float directionalChange = -repStrength * angleSign * Mathf.Exp(-distanceToAgent / interactionRange - (angInterRange * interactionRange * interactionAngle) * (angInterRange * interactionRange * interactionAngle));
         Vector3 normalInteractionVector = new Vector3(-interactionDir.z, interactionDir.y, interactionDir.x);
-        //Vector3 normalInteractionVector = new Vector3(-interactionDir.y, interactionDir.x, 0);
 
         interactionForce += deceleration * interactionDir + directionalChange * normalInteractionVector;
         return interactionForce;
@@ -230,35 +204,5 @@ public class SFManager : MonoBehaviour
         }
         repulsiveForce.y = 0.0f;
         return repulsiveForce;
-    }
-
-    public void StartRecording()
-    {
-        m_CanRecord = true;
-    }
-
-    public bool IsRecording()
-    {
-        return m_CanRecord;
-    }
-
-    public void RecordTime(int agentType, float time)
-    {
-        m_RecordedTimes[agentType] += time;
-        ++m_RecordedCount;
-<<<<<<< HEAD
-        float sum = 0;
-        if(m_RecordedCount == m_Destinations.Count + 1)
-=======
-        if(m_RecordedCount >= m_Agents.Count)
->>>>>>> parent of 3e53dd4 (Measuring setup changes)
-        {
-            for(int i = 1; i < m_RecordedTimes.Count; ++i)
-            {
-                sum += m_RecordedTimes[i];
-            }
-            Debug.Log("Recording complete");
-            m_CanRecord = false;
-        }
     }
 }
