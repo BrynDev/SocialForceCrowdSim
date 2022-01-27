@@ -128,9 +128,9 @@ public class SFCharacter : MonoBehaviour
     }
 
     //TEMP
+    private bool m_HasRecorded = false;
     private bool m_IsRecording = false;
     private float m_LastTimePoint = 0.0f;
-    private int m_DestIndex = 0;
 
     void Awake()
     {
@@ -153,15 +153,7 @@ public class SFCharacter : MonoBehaviour
     {
         if (m_CharacterAgent.remainingDistance < m_CharacterAgent.stoppingDistance)
         {
-            if(!m_IsRecording)
-            {
-                SetNewDestination();
-            }
-            else
-            {
-                SetNextOrderedDestination();
-            }
-            
+            SetNewDestination();
         }
                 
         Vector3 drivingForce = m_Params.DrivingWeight * DrivingForce();
@@ -215,12 +207,26 @@ public class SFCharacter : MonoBehaviour
 
     private void SetNewDestination()
     {
-       
-        m_Destination = m_SFManager.GetRandomDestination().transform;      
-        
+        m_Destination = m_SFManager.GetRandomDestination().transform;
         m_CharacterAgent.SetDestination(m_Destination.position);
         // Stop the navmesh agent from performing any movement - we want full manual control of agent movement
-        m_CharacterAgent.isStopped = true;    
+        m_CharacterAgent.isStopped = true;
+
+        if(m_SFManager.IsRecording())
+        {
+            if(!m_IsRecording)
+            {
+                m_LastTimePoint = Time.time;
+                m_IsRecording = true;
+            }
+            else if(!m_HasRecorded)
+            {
+                float timeTaken = Time.time - m_LastTimePoint;
+                m_SFManager.RecordTime((int)m_Params.Type, timeTaken);
+                m_IsRecording = false;
+                m_HasRecorded = true;
+            }
+        }
     }
 
     private void SetNextOrderedDestination()
@@ -229,19 +235,6 @@ public class SFCharacter : MonoBehaviour
         m_CharacterAgent.SetDestination(m_Destination.position);
         // Stop the navmesh agent from performing any movement - we want full manual control of agent movement
         m_CharacterAgent.isStopped = true;
-        if(m_IsRecording)
-        {
-            float timeTaken = Time.time - m_LastTimePoint;
-            m_LastTimePoint = Time.time;            
-            m_SFManager.RecordTime(m_DestIndex, timeTaken);
-            ++m_DestIndex;
-            Debug.Log("Time recorded");
-        }
-    }
-
-    public void StartRecording()
-    {
-        m_IsRecording = true;
     }
 
 }
