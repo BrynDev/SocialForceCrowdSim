@@ -2666,7 +2666,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6806680946220523908, guid: 99811b262a2492e4cb6821473eb8fd4b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 23.46
+      value: 27.16
       objectReference: {fileID: 0}
     - target: {fileID: 6806680946220523908, guid: 99811b262a2492e4cb6821473eb8fd4b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2727,11 +2727,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AgentParentTransform: {fileID: 1828954}
   m_AgentPrefab: {fileID: 1642887807717105375, guid: bffa9f1b97044e144b98401d1f7d2f6b, type: 3}
+<<<<<<< HEAD
   m_NrStandardAgents: 100
   m_NrAgressiveAgents: 0
   m_NrCautiousAgents: 0
   m_NrDistractedAgents: 0
   m_NrRecklessAgents: 0
+=======
+  m_NrStandardAgents: 10
+  m_NrAgressiveAgents: 10
+  m_NrCautiousAgents: 10
+  m_NrDistractedAgents: 10
+  m_NrRecklessAgents: 10
+>>>>>>> parent of 3e53dd4 (Measuring setup changes)
   m_SpawnDelay: 0.5
 --- !u!4 &888260799 stripped
 Transform:
