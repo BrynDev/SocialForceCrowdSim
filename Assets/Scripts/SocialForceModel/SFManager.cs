@@ -205,7 +205,7 @@ public class SFManager : MonoBehaviour
 
         return obsInteractForce;
     }
-
+    //a
     public Vector3 CalculateAttractive(Vector3 agentPosition, float agentRadius, float forceRange, float forceStrength)
     {
         Vector3 repulsiveForce = new Vector3();

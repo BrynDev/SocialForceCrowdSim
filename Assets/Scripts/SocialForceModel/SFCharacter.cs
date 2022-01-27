@@ -148,7 +148,6 @@ public class SFCharacter : MonoBehaviour
         m_CharacterAgent.stoppingDistance = 1.5f;      
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         if (m_CharacterAgent.remainingDistance < m_CharacterAgent.stoppingDistance)
