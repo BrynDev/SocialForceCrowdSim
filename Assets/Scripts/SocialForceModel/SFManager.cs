@@ -41,7 +41,7 @@ public class SFManager : MonoBehaviour
             m_Attractors.Add(attractor);
         }
 
-        for (int i = 0; i < m_Destinations.Count; ++i)
+        for (int i = 0; i < m_Destinations.Count + 1; ++i)
         {
             m_RecordedTimes.Add(0);
         }
@@ -239,8 +239,13 @@ public class SFManager : MonoBehaviour
     {
         m_RecordedTimes[destIndex] = time;
         ++m_RecordedCount;
+        float sum = 0;
         if(m_RecordedCount == m_Destinations.Count + 1)
         {
+            for(int i = 1; i < m_RecordedTimes.Count; ++i)
+            {
+                sum += m_RecordedTimes[i];
+            }
             Debug.Log("Recording complete");
             m_CanRecord = false;
         }

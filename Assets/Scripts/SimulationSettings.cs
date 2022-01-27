@@ -125,7 +125,7 @@ public class SimulationSettings : MonoBehaviour
                     //TEMP
                     m_SFManager.StartRecording();
                     GameObject spawnedAgent = Instantiate(m_AgentPrefab, m_AgentParentTransform);
-                    spawnedAgent.GetComponent<SFCharacter>().Parameters = m_StandardParams;
+                    spawnedAgent.GetComponent<SFCharacter>().Parameters = m_RecklessParams;
                     spawnedAgent.GetComponent<SFCharacter>().StartRecording();
                     // Spawning has stopped, exit this function to avoid spawning an extra agent
                     return;
@@ -241,7 +241,7 @@ public class SimulationSettings : MonoBehaviour
 
         //Wall repulsive
         charParams.WallRepulsiveWeight = 1.1f;
-        charParams.WallRepulsiveStrength = 2.8f;
+        charParams.WallRepulsiveStrength = 3.2f;
         charParams.WallRepulsiveRange = 0.8f;
 
         //Driving force
@@ -249,8 +249,8 @@ public class SimulationSettings : MonoBehaviour
         charParams.DesiredSpeed = 0.4f;
 
         //Attractice force
-        charParams.AttractiveWeight = 0.1f;
-        charParams.AttractiveStrength = 2.0f;
+        charParams.AttractiveWeight = 0.08f;
+        charParams.AttractiveStrength = 1.9f;
         charParams.AttractiveRange = 10.0f;
 
         return charParams;
@@ -289,7 +289,7 @@ public class SimulationSettings : MonoBehaviour
         //Attractice force
         charParams.AttractiveWeight = 0.1f;
         charParams.AttractiveStrength = 4.0f;
-        charParams.AttractiveRange = 8.0f;
+        charParams.AttractiveRange = 7.0f;
 
         return charParams;
     }
