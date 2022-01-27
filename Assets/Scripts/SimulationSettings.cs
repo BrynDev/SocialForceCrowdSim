@@ -120,16 +120,13 @@ public class SimulationSettings : MonoBehaviour
                 default:
                     // No more known types to spawn, therefore stop spawning
                     m_ElapsedTime = 0.0f;
-                    Debug.Log("Finished spawning agents");
+                    Debug.Log("Finished spawning agents");                   
                     m_CanSpawn = false;
                     //TEMP
                     m_SFManager.StartRecording();
-<<<<<<< HEAD
                     GameObject spawnedAgent = Instantiate(m_AgentPrefab, m_AgentParentTransform);
                     spawnedAgent.GetComponent<SFCharacter>().Parameters = m_RecklessParams;
                     spawnedAgent.GetComponent<SFCharacter>().StartRecording();
-=======
->>>>>>> parent of 3e53dd4 (Measuring setup changes)
                     // Spawning has stopped, exit this function to avoid spawning an extra agent
                     return;
             }
@@ -212,11 +209,6 @@ public class SimulationSettings : MonoBehaviour
         //Driving force
         charParams.DrivingWeight = 1.1f;
         charParams.DesiredSpeed = 0.7f;
-
-        //Attractice force
-        charParams.AttractiveWeight = 0.2f;
-        charParams.AttractiveStrength = 5.0f;
-        charParams.AttractiveRange = 8.0f;
 
         //Attractice force
         charParams.AttractiveWeight = 0.1f;
@@ -319,7 +311,7 @@ public class SimulationSettings : MonoBehaviour
 
         //General repulsive
         charParams.DirectionWeight = 2.6f;
-        charParams.RangeDirFactor = 0.35f;
+        charParams.RangeDirFactor = 0.4f;
         charParams.AngInteractRange = 0.7f;
         charParams.AngInteractRangeLarge = 0.8f;
 
