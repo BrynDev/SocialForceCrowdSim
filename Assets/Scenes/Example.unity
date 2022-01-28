@@ -1170,10 +1170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31a17365de6063648a04befdf520aa92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walls: []
-  agents: []
-  destination: {fileID: 258958246}
-  desiredSpeed: 0.5
+  m_Destination: {fileID: 0}
 --- !u!195 &258958248
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1532,14 +1529,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31a17365de6063648a04befdf520aa92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walls:
-  - {fileID: 569264044}
-  agents:
-  - {fileID: 327448588}
-  - {fileID: 1460875270}
-  - {fileID: 258958247}
-  destination: {fileID: 62921820}
-  desiredSpeed: 0.5
+  m_Destination: {fileID: 0}
 --- !u!114 &327448589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2474,17 +2464,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7999820211959101982, guid: 51082a879120af9498c8ddf37a0d21ab, type: 3}
   m_PrefabInstance: {fileID: 7999820212501331381}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &569264044 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7999820211959101977, guid: 51082a879120af9498c8ddf37a0d21ab, type: 3}
-  m_PrefabInstance: {fileID: 7999820212501331381}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2a9c5cadca5a1b46b7dbc3a4aa81333, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &574409757
 GameObject:
   m_ObjectHideFlags: 0
@@ -6033,14 +6012,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31a17365de6063648a04befdf520aa92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walls:
-  - {fileID: 569264044}
-  agents:
-  - {fileID: 1460875270}
-  - {fileID: 327448588}
-  - {fileID: 258958247}
-  destination: {fileID: 780672446}
-  desiredSpeed: 0.5
+  m_Destination: {fileID: 0}
 --- !u!114 &1460875271
 MonoBehaviour:
   m_ObjectHideFlags: 0
